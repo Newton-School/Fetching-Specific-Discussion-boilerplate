@@ -1,4 +1,3 @@
-const { compareSync } = require("bcrypt");
 const Discussion   = require("../models/Discussion.js");
 
 
@@ -14,18 +13,19 @@ const getalldiscussion =async (req, res) => {
 
 const creatediscussion = async (req, res) => {
 
-    Discussion.create(req.body).then((discussion)=> {
-        res.status(200).json({
-            "message": 'Discussion added successfully',
-            "discussion_id": discussion._id,
-            "status": 'success'
-        });
-    }).catch((err) => {
+    try{
+    const discussion = await Discussion.create(req.body);
+    res.status(200).json({
+        "message": 'Discussion added successfully',
+        "discussion_id": discussion._id,
+        "status": 'success'
+    });
+    }catch(err){
         res.status(404).json({
             "status": 'fail',
             "message": err.message
         });
-    });
+    }
 }
 
 const deletediscussion = async (req, res) => {
@@ -41,28 +41,27 @@ const deletediscussion = async (req, res) => {
         })
     }
 
-    Discussion.findByIdAndDelete(id).then(() => {
+    try{
+        await Discussion.findByIdAndDelete(id);
         res.status(200).json({
             status: 'success',
             message: 'Discussion deleted successfully'
         });
-    })
-    .catch((err) => {
+    }catch(err){
         res.status(404).json({
             "status": 'fail',
             "message": err.message
         })
-    });
-
+    }
 }
 
 const updatediscussion = async (req, res) => {
 
     const id = req.params.id;
-    console.log(id);
+    // console.log(id);
 
     const discussion = await Discussion.findById(id);
-    console.log(discussion);
+    // console.log(discussion);
     if(!discussion)
     {
         res.status(403).json({
@@ -71,18 +70,18 @@ const updatediscussion = async (req, res) => {
         })
     }
 
-    Discussion.findByIdAndUpdate(id, req.body).then(() => {
+    try{
+        await Discussion.findByIdAndUpdate(id, req.body);
         res.status(200).json({
             status: 'success',
             message: 'Discussion updated successfully'
         });
-    })
-    .catch((err) => {
+    } catch(err){
         res.status(404).json({
             "status": 'fail',
             "message": err.message
         })
-    });
+    };
 
 }
 
@@ -119,7 +118,7 @@ json = {
 
 const getdiscussion = async (req, res) => {
 
-    //Write your code here.
+    //write your code here.
 
 }
 
